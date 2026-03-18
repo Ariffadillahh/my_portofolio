@@ -3,11 +3,11 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useLoginMutation, useSnedOtpMutation } from "../../services/auth.service"; 
+import { useLoginMutation, useSnedOtpMutation } from "../../services/auth.service";
 import toast, { Toaster } from "react-hot-toast";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 
 const loginSchema = yup.object().shape({
@@ -26,12 +26,12 @@ type LoginFormData = {
   password: string;
 };
 
-const LoginPage = () => {
+const LoginContent = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [modal, setModal] = useState(false);
-  const [resetEmail, setResetEmail] = useState(""); 
+  const [resetEmail, setResetEmail] = useState("");
 
   const {
     register,
@@ -50,7 +50,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     router.prefetch("/dashboard");
-    router.prefetch("/auth/reset-password"); 
+    router.prefetch("/auth/reset-password");
   }, [router]);
 
   const onSubmit = async (data: LoginFormData) => {
@@ -199,6 +199,14 @@ const LoginPage = () => {
         </div>
       )}
     </>
+  );
+};
+
+const LoginPage = () => {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-gray-500">Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 };
 
