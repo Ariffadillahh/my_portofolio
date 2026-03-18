@@ -4,9 +4,9 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useResetPasswordMutation } from "../../services/auth.service";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 
 const resetSchema = yup.object().shape({
     email: yup
@@ -33,10 +33,9 @@ type ResetFormData = {
     token: string;
 };
 
-const ResetPasswordPage = () => {
+const ResetPasswordContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
-
     const emailQuery = searchParams.get("email") || "";
 
     const {
@@ -158,6 +157,14 @@ const ResetPasswordPage = () => {
                 </button>
             </form>
         </div>
+    );
+};
+
+const ResetPasswordPage = () => {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-gray-500">Loading...</div>}>
+            <ResetPasswordContent />
+        </Suspense>
     );
 };
 
