@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Arif Fadillah Wicaksono | Web Developer",
-  description: "Portofolio digital Arif Fadillah Wicaksono. Menampilkan berbagai proyek web development modern, termasuk pengembangan aplikasi terintegrasi seperti Decisify dan ParfumeGue.",
+  title: "Arif Fadillah Wicaksono | Web Portofolio",
+  description: "Portofolio digital Arif Fadillah Wicaksono. Menampilkan berbagai proyek web development dan pengalaman kerja.",
   keywords: [
     "Arif Fadillah Wicaksono",
     "Arif Fadillah",

@@ -23,7 +23,7 @@ const ProjectsPage = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [isHoveringProjects, setIsHoveringProjects] = useState(false);
-  
+
   const [cardDim, setCardDim] = useState({ width: "300px", height: "200px" });
 
   const debouncedSearch = useDebounce(search, 500);
@@ -35,13 +35,10 @@ const ProjectsPage = () => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1280) {
-        // XL screens
         setCardDim({ width: "370px", height: "250px" });
       } else if (window.innerWidth >= 768) {
-        // MD screens
         setCardDim({ width: "340px", height: "230px" });
       } else {
-        // Mobile
         const safeWidth = Math.min(window.innerWidth - 40, 340);
         setCardDim({ width: `${safeWidth}px`, height: "220px" });
       }
@@ -116,7 +113,7 @@ const ProjectsPage = () => {
         <div className="relative z-10 px-4 sm:px-6 md:px-12 lg:px-20 py-6 md:py-10">
 
           <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-8 md:mb-12 gap-4 md:gap-6">
-            
+
             <div className="text-center md:text-left w-full md:w-auto">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 to-purple-700 bg-clip-text text-transparent drop-shadow-sm">
                 My Projects
@@ -166,7 +163,7 @@ const ProjectsPage = () => {
             {posts.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 lg:gap-10 place-items-center">
                 {posts.map((post: any) => (
-                  <Link href={`/projects/${post.id}`} key={post.id} className="relative group cursor-target w-full flex justify-center"> 
+                  <Link href={`/projects/${post.id}`} key={post.id} className="relative group cursor-target w-full flex justify-center">
                     <TiltedCard
                       imageSrc={`${storageUrl}/${post.images[0]}`}
                       altText={post.title}
@@ -181,10 +178,12 @@ const ProjectsPage = () => {
                       showTooltip={true}
                       displayOverlayContent={true}
                       overlayContent={
-                        <div className="inline-flex flex-col gap-1 px-3 py-2 md:px-4 md:py-2.5 rounded-xl md:rounded-2xl bg-black/60 border border-white/20 backdrop-blur-md pointer-events-auto max-w-[90%] md:max-w-full">
-                          <p className="tilted-card-demo-text font-bold text-base sm:text-lg md:text-xl text-white leading-tight line-clamp-2">
-                            {post.title}
+                        <div className="inline-flex flex-col gap-1 px-3 py-2 md:px-4 rounded-xl md:rounded-2xl border border-white/50 bg-black/60 backdrop-blur-md pointer-events-auto ">
+                          <p className="tilted-card-demo-text font-bold text-base sm:text-lg md:text-xl text-white leading-tight">
+                            {post.title.split(' ').slice(0, 2).join(' ')}
+                            {post.title.split(' ').length > 2 ? '...' : ''}
                           </p>
+
                           {post.short_description && (
                             <p className="text-[10px] sm:text-xs text-neutral-300 leading-snug line-clamp-2 md:line-clamp-3">
                               {post.short_description}

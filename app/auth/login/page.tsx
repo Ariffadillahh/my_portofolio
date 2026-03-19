@@ -73,7 +73,8 @@ const LoginContent = () => {
         }
 
         const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
-        router.replace(callbackUrl);
+        
+        window.location.href = callbackUrl;
       }
     } catch (error: any) {
       toast.error(error.data?.message || "An error occurred", {

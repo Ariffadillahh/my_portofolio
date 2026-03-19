@@ -40,6 +40,8 @@ const PostPage = () => {
     const posts = postsData?.data?.data || [];
     const meta = postsData?.data;
 
+    
+
     return (
         <DashboardLayout>
             <div className="space-y-6">
@@ -118,17 +120,20 @@ const PostPage = () => {
                             <tbody className="divide-y">
                                 {posts.map((post: any) => (
                                     <tr key={post.id} className="hover:bg-blue-50">
-                                        <td className="px-6 py-4 font-medium text-gray-900">
+                                        <td className="px-6 py-4 font-medium text-gray-900 max-w-[200px] truncate">
                                             {post.title}
                                         </td>
-                                        <td className="px-6 py-4 max-w-xs truncate">
-                                            {post.description}
+
+                                        <td className="px-6 py-4 max-w-xs">
+                                            <p className="line-clamp-2 text-sm text-gray-500">
+                                                {post.description}
+                                            </p>
                                         </td>
                                         <td className="px-6 py-4">
                                             <span
                                                 className={`px-2.5 py-0.5 rounded-full text-xs font-medium border capitalize ${post.status === "publish"
-                                                        ? "bg-green-100 text-green-800 border-green-200"
-                                                        : "bg-yellow-100 text-yellow-800 border-yellow-200"
+                                                    ? "bg-green-100 text-green-800 border-green-200"
+                                                    : "bg-yellow-100 text-yellow-800 border-yellow-200"
                                                     }`}
                                             >
                                                 {post.status}
