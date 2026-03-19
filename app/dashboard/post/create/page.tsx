@@ -85,10 +85,12 @@ export default function CreatePostPage() {
     const validationSchema = Yup.object().shape({
         title: Yup.string()
             .required("Judul wajib diisi")
-            .min(5, "Judul minimal 5 karakter"),
+            .min(3, "Judul minimal 3 karakter")
+            .max(30, "Judul maksimal 30 karakter"),
         description: Yup.string()
             .required("Deskripsi wajib diisi")
-            .min(5, "Deskripsi minimal 5 karakter"),
+            .min(5, "Deskripsi minimal 5 karakter")
+            .max(1000, "Deskripsi maksimal 1000 karakter"),
         link: Yup.string()
             .url("Format URL tidak valid (awali dengan http/https)")
             .nullable(),
@@ -169,26 +171,38 @@ export default function CreatePostPage() {
                     <div className="lg:col-span-2 space-y-6">
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-6">
                             <div>
-                                <label htmlFor="title" className={labelStyle}>
-                                    Judul Postingan
-                                </label>
+                                <div className="flex justify-between items-center mb-2">
+                                    <label htmlFor="title" className="block text-sm font-semibold text-gray-700">
+                                        Judul Postingan
+                                    </label>
+                                    <span className={`text-xs font-medium ${title.length >= 30 ? 'text-red-500' : 'text-gray-400'}`}>
+                                        {title.length}/30
+                                    </span>
+                                </div>
                                 <input
                                     type="text"
                                     id="title"
+                                    maxLength={30}
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                     className={inputStyle(!!errors.title)}
-                                    placeholder="Contoh: Tutorial Belajar Next.js untuk Pemula"
+                                    placeholder="Contoh: Tutorial Belajar Next.js"
                                 />
                                 {errors.title && <p className="mt-1 text-xs text-red-500">{errors.title}</p>}
                             </div>
 
                             <div>
-                                <label htmlFor="desc" className={labelStyle}>
-                                    Deskripsi Lengkap
-                                </label>
+                                <div className="flex justify-between items-center mb-2">
+                                    <label htmlFor="desc" className="block text-sm font-semibold text-gray-700">
+                                        Deskripsi Lengkap
+                                    </label>
+                                    <span className={`text-xs font-medium ${description.length >= 1000 ? 'text-red-500' : 'text-gray-400'}`}>
+                                        {description.length}/1000
+                                    </span>
+                                </div>
                                 <textarea
                                     id="desc"
+                                    maxLength={1000} 
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     className={`${inputStyle(!!errors.description)} h-40 resize-y`}

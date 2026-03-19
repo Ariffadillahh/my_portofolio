@@ -152,7 +152,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
                             </div>
                         </div>
 
-                        <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight">
+                        <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight truncate">
                             {post.title}
                         </h1>
 

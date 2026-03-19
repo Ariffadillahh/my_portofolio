@@ -13,7 +13,10 @@ const AddTags = () => {
     const { refetch } = useGetAllTagQuery();
 
     const createSchema = yup.object().shape({
-        nameTag: yup.string().required("Tag Name is required"),
+        nameTag: yup.string()
+            .required("Tag Name is required")
+            .max(20, "Tag Max 20 Caracter")
+            .min(3, 'Tag Min 3 Caracter')
     });
 
     type CreateTagForm = {
@@ -24,10 +27,13 @@ const AddTags = () => {
         register,
         handleSubmit,
         reset,
+        watch,
         formState: { errors },
     } = useForm<CreateTagForm>({
         resolver: yupResolver(createSchema),
     });
+
+    const nameTagValue = watch("nameTag") || "";
 
     const createHandle = async (data: CreateTagForm) => {
         try {
@@ -74,12 +80,18 @@ const AddTags = () => {
                         <div className="p-6 space-y-6">
                             <form onSubmit={handleSubmit(createHandle)}>
                                 <div className="mb-4">
-                                    <label htmlFor="nameTag" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                        Tag Name
-                                    </label>
+                                    <div className="flex justify-between items-center mb-2">
+                                        <label htmlFor="nameTag" className="block text-sm font-medium text-gray-900 dark:text-white">
+                                            Tag Name
+                                        </label>
+                                        <span className={`text-xs font-medium ${nameTagValue.length >= 20 ? 'text-red-500' : 'text-gray-400'}`}>
+                                            {nameTagValue.length}/20
+                                        </span>
+                                    </div>
                                     <input
                                         type="text"
                                         id="nameTag"
+                                        maxLength={20}
                                         className={`bg-gray-50 border ${errors.nameTag ? 'border-red-500' : 'border-gray-300'} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white`}
                                         placeholder="e.g. JavaScript, PHP"
                                         autoFocus

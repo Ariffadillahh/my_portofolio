@@ -8,7 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
-import Link from "next/link";
+import { HiEye, HiEyeOff } from "react-icons/hi";
 
 const loginSchema = yup.object().shape({
   email: yup
@@ -30,8 +30,10 @@ const LoginContent = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
+
   const [modal, setModal] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -73,8 +75,13 @@ const LoginContent = () => {
         }
 
         const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
-        
+
         window.location.href = callbackUrl;
+
+        toast.success("Login Berhasil", {
+          duration: 3000,
+          position: "top-right",
+        });
       }
     } catch (error: any) {
       toast.error(error.data?.message || "An error occurred", {
@@ -107,6 +114,10 @@ const LoginContent = () => {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <>
       <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-5">
@@ -137,13 +148,26 @@ const LoginContent = () => {
             <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Password
             </label>
-            <input
-              type="password"
-              id="password"
-              {...register("password")}
-              placeholder="••••••••"
-              className={`bg-gray-50 border ${errors.password ? "border-red-500" : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white`}
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                {...register("password")}
+                placeholder="••••••••"
+                className={`bg-gray-50 border ${errors.password ? "border-red-500" : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white`}
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                {showPassword ? (
+                  <HiEyeOff className="w-5 h-5" aria-hidden="true" />
+                ) : (
+                  <HiEye className="w-5 h-5" aria-hidden="true" />
+                )}
+              </button>
+            </div>
             {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>}
 
             <div className="flex justify-end my-3 text-sm">

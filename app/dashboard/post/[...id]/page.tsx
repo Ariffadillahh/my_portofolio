@@ -101,10 +101,18 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
     };
 
     const validationSchema = Yup.object().shape({
-        title: Yup.string().required("Judul wajib diisi"),
-        description: Yup.string().required("Deskripsi wajib diisi").min(5),
-        link: Yup.string().url("URL tidak valid").nullable(),
-        tags: Yup.array().min(1, "Pilih minimal 1 tag")
+        title: Yup.string()
+            .required("Judul wajib diisi")
+            .max(30, "Judul maksimal 30 karakter"),
+        description: Yup.string()
+            .required("Deskripsi wajib diisi")
+            .min(5, "Deskripsi minimal 5 karakter")
+            .max(1000, "Deskripsi maksimal 1000 karakter"),
+        link: Yup.string()
+            .url("URL tidak valid")
+            .nullable(),
+        tags: Yup.array()
+            .min(1, "Pilih minimal 1 tag")
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -209,9 +217,15 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
 
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-5">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Judul Postingan</label>
+                                <div className="flex justify-between items-center mb-2">
+                                    <label className="block text-sm font-semibold text-gray-700">Judul Postingan</label>
+                                    <span className={`text-xs font-medium ${title.length >= 30 ? 'text-red-500' : 'text-gray-400'}`}>
+                                        {title.length}/30
+                                    </span>
+                                </div>
                                 <input
                                     type="text"
+                                    maxLength={30} 
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                     className={inputClass(!!errors.title)}
@@ -221,9 +235,15 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Deskripsi Lengkap</label>
+                                <div className="flex justify-between items-center mb-2">
+                                    <label className="block text-sm font-semibold text-gray-700">Deskripsi Lengkap</label>
+                                    <span className={`text-xs font-medium ${description.length >= 1000 ? 'text-red-500' : 'text-gray-400'}`}>
+                                        {description.length}/1000
+                                    </span>
+                                </div>
                                 <textarea
                                     value={description}
+                                    maxLength={1000} 
                                     onChange={(e) => setDescription(e.target.value)}
                                     rows={8}
                                     className={inputClass(!!errors.description)}

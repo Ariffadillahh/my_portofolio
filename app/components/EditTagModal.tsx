@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useEditTagMutation, useGetAllTagQuery } from "../services/tag.service";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
@@ -15,7 +15,10 @@ const EditTags = ({ name, id }: { name: string, id: string }) => {
     const { refetch } = useGetAllTagQuery();
 
     const editSchema = yup.object().shape({
-        nameTag: yup.string().required("Tag name is required"),
+        nameTag: yup.string()
+            .required("Tag name is required")
+            .max(20, "Tag Max 20 Caracter")
+            .min(3, 'Tag Min 3 Caracter'),
     });
 
     type EditTagForm = {
@@ -27,11 +30,14 @@ const EditTags = ({ name, id }: { name: string, id: string }) => {
         handleSubmit,
         reset,
         setValue,
+        watch, 
         formState: { errors }
     } = useForm<EditTagForm>({
         resolver: yupResolver(editSchema),
-        defaultValues: { nameTag: name } 
+        defaultValues: { nameTag: name }
     });
+
+    const nameTagValue = watch("nameTag") || "";
 
     const handleOpen = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -45,7 +51,7 @@ const EditTags = ({ name, id }: { name: string, id: string }) => {
             await updateTag({ id, payload: data }).unwrap();
             toast.success("Tag updated successfully");
             setIsOpen(false);
-            refetch(); 
+            refetch();
         } catch (error: any) {
             console.error(error);
             toast.error(error?.data?.message || "Failed to update tag");
@@ -86,12 +92,19 @@ const EditTags = ({ name, id }: { name: string, id: string }) => {
                         <div className="p-6">
                             <form onSubmit={handleSubmit(handleEdit)} className="space-y-4">
                                 <div>
-                                    <label htmlFor="nameTag" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                        Tag Name
-                                    </label>
+                                    <div className="flex justify-between items-center mb-2">
+                                        <label htmlFor="nameTag" className="block text-sm font-medium text-gray-900 dark:text-white">
+                                            Tag Name
+                                        </label>
+                                        {/* Counter Karakter Tag */}
+                                        <span className={`text-xs font-medium ${nameTagValue.length >= 20 ? 'text-red-500' : 'text-gray-400'}`}>
+                                            {nameTagValue.length}/20
+                                        </span>
+                                    </div>
                                     <input
                                         type="text"
                                         id="nameTag"
+                                        maxLength={20}
                                         className={`bg-gray-50 border ${errors.nameTag ? 'border-red-500' : 'border-gray-300'} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white`}
                                         placeholder="JavaScript"
                                         autoFocus

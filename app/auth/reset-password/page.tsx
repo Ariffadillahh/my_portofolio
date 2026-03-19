@@ -6,7 +6,8 @@ import * as yup from "yup";
 import { useResetPasswordMutation } from "../../services/auth.service";
 import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, Suspense } from "react";
+import { useEffect, useState, Suspense } from "react";
+import { HiEye, HiEyeOff } from "react-icons/hi";
 
 const resetSchema = yup.object().shape({
     email: yup
@@ -37,6 +38,8 @@ const ResetPasswordContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const emailQuery = searchParams.get("email") || "";
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const {
         register,
@@ -54,10 +57,13 @@ const ResetPasswordContent = () => {
     });
 
     useEffect(() => {
-        if (emailQuery) {
+        if (!emailQuery) {
+            toast.error("Akses tidak valid. Silakan mulai ulang dari lupa password.");
+            router.replace("/auth/login"); 
+        } else {
             setValue("email", emailQuery);
         }
-    }, [emailQuery, setValue]);
+    }, [emailQuery, setValue, router]);
 
     const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
@@ -78,6 +84,10 @@ const ResetPasswordContent = () => {
             });
         }
     };
+
+    if (!emailQuery) {
+        return <div className="min-h-screen flex items-center justify-center text-gray-500">Redirecting...</div>;
+    }
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-5">
@@ -122,13 +132,22 @@ const ResetPasswordContent = () => {
                     <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                         Password Baru
                     </label>
-                    <input
-                        type="password"
-                        id="password"
-                        {...register("password")}
-                        placeholder="••••••••"
-                        className={`bg-gray-50 border ${errors.password ? "border-red-500" : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white`}
-                    />
+                    <div className="relative">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            id="password"
+                            {...register("password")}
+                            placeholder="••••••••"
+                            className={`bg-gray-50 border ${errors.password ? "border-red-500" : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white`}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                        >
+                            {showPassword ? <HiEyeOff className="w-5 h-5" /> : <HiEye className="w-5 h-5" />}
+                        </button>
+                    </div>
                     {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>}
                 </div>
 
@@ -136,13 +155,22 @@ const ResetPasswordContent = () => {
                     <label htmlFor="password_confirmation" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                         Konfirmasi Password Baru
                     </label>
-                    <input
-                        type="password"
-                        id="password_confirmation"
-                        {...register("password_confirmation")}
-                        placeholder="••••••••"
-                        className={`bg-gray-50 border ${errors.password_confirmation ? "border-red-500" : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white`}
-                    />
+                    <div className="relative">
+                        <input
+                            type={showConfirmPassword ? "text" : "password"}
+                            id="password_confirmation"
+                            {...register("password_confirmation")}
+                            placeholder="••••••••"
+                            className={`bg-gray-50 border ${errors.password_confirmation ? "border-red-500" : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white`}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                        >
+                            {showConfirmPassword ? <HiEyeOff className="w-5 h-5" /> : <HiEye className="w-5 h-5" />}
+                        </button>
+                    </div>
                     {errors.password_confirmation && (
                         <p className="mt-1 text-sm text-red-500">{errors.password_confirmation.message}</p>
                     )}

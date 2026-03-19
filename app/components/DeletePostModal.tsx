@@ -60,7 +60,7 @@ const DeletePostModal = ({ name, id }: { name: string, id: string }) => {
 
                         <div className="p-6 text-center">
                             <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
-                            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 truncate">
                                 Are you sure you want to delete <span className="font-bold text-gray-800">"{name}"</span>?
                             </h3>
 
