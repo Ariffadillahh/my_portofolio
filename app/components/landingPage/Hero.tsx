@@ -9,7 +9,6 @@ import { useGetCvQuery } from '@/app/services/cv.service';
 import DarkVeil from '../Bites/DarkVeil';
 
 const Hero = () => {
-  const storageUrl = process.env.NEXT_PUBLIC_STORAGE_CV_URL;
   const { data: existingCv } = useGetCvQuery();
   const cvData = existingCv?.cv?.[0];
 
@@ -79,10 +78,15 @@ const Hero = () => {
               pointer-events-auto
             "
           >
-            <a
-              href={cvData ? `${storageUrl}/${cvData.name_cv}` : '#'}
-              download={cvData?.original_name || ''}
-              target='_blank'
+            <button
+              onClick={() => {
+                if (cvData?.name_cv) {
+                  window.open(
+                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/download/cv/${cvData.name_cv}`,
+                    '_blank'
+                  );
+                }
+              }}
               className="
                 group relative inline-flex items-center justify-center gap-2
                 w-full sm:w-full lg:w-auto
@@ -91,12 +95,11 @@ const Hero = () => {
                 bg-white text-black rounded-full font-semibold
                 transition-all duration-300
                 hover:scale-105 hover:bg-gray-100
-                focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black
               "
             >
               <span>Download CV</span>
               <FaDownload className="w-4 h-4 transition-transform group-hover:translate-y-0.5" />
-            </a>
+            </button>
 
             <button
               onClick={(e: any) => handleNavClick(e, '#about')}
