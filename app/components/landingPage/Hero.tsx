@@ -82,7 +82,7 @@ const Hero = () => {
               onClick={() => {
                 if (cvData?.name_cv) {
                   window.open(
-                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/download/cv/${cvData.name_cv}`,
+                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/download/cv/${cvData.name_cv}`,
                     '_blank'
                   );
                 }
